@@ -20,6 +20,9 @@ class User(models.Model):
             models.Index(fields=["email"])
         ]
 
+    def __str__(self):
+        return self.username
+
 class Artist(models.Model):
     name = models.CharField(verbose_name='имя артиста', max_length=100)
     bio = models.TextField(verbose_name='биография', blank=True, null=True)
@@ -34,6 +37,9 @@ class Artist(models.Model):
         indexes = [
             models.Index(fields=["name"])
         ]
+        
+    def __str__(self):
+        return self.name
 
 class Album(models.Model):
     ALBUM_TYPES = [
@@ -56,6 +62,9 @@ class Album(models.Model):
         indexes = [
             models.Index(fields=["artist", "release_date"])
         ]
+        
+    def __str__(self):
+        return self.title
 
 class Track(models.Model):
     title = models.CharField(verbose_name='название трека', max_length=200)
@@ -75,6 +84,10 @@ class Track(models.Model):
             models.Index(fields=["album"])
         ]
 
+    def __str__(self):
+        return self.title
+
+
 class Playlist(models.Model):
     title = models.CharField(verbose_name='название плейлиста', max_length=200)
     user = models.ForeignKey(User, verbose_name='пользователь', on_delete=models.CASCADE, blank=True, null=True)
@@ -88,6 +101,9 @@ class Playlist(models.Model):
         verbose_name = "Плейлист"
         verbose_name_plural = "Плейлисты"
         ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.title
 
 class PlaylistTrack(models.Model):
     playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
@@ -114,6 +130,10 @@ class ListeningHistory(models.Model):
         indexes = [
             models.Index(fields=["user", "listened_at"])
         ]
+
+    def __str__(self):
+        if self.track:
+            return f"{self.user.username} - {self.track.title}"
 
 class UserFavorite(models.Model):
     user = models.ForeignKey(User, verbose_name='пользователь', on_delete=models.CASCADE)
